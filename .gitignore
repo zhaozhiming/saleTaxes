@@ -1,0 +1,6 @@
+#class files
+out/*
+
+#idea config
+.idea/*
+salesTaxes.iml
