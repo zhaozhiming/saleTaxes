@@ -23,6 +23,23 @@ public class Goods {
         return salesTaxesAndTotalPrice().get(TOTAL_PRICE);
     }
 
+    public String output() {
+        String[] descriptionArray = descriptions.split("\n");
+        StringBuilder output = new StringBuilder();
+        for (String description : descriptionArray) {
+            Good good = new Good(description);
+            output.append(good.count()).append(" ").append(good.name()).append(": ")
+                    .append(formatCurrency(good.priceAfterTax())).append("\n");
+        }
+        output.append("Sales Taxes: ").append(formatCurrency(salesTaxes())).append("\n");
+        output.append("Total: ").append(formatCurrency(totalPrice()));
+        return output.toString();
+    }
+
+    private String formatCurrency(double currency) {
+        return String.format("%.2f", currency);
+    }
+
     private Map<String, Double> salesTaxesAndTotalPrice() {
         String[] descriptionArray = descriptions.split("\n");
         double salesTaxes = 0;
