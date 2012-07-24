@@ -3,7 +3,8 @@ package org.thoughtworks.homework;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.thoughtworks.homework.Good.getCorrectScaleCurrency;
+import static org.thoughtworks.homework.GoodUtil.formatCurrency;
+import static org.thoughtworks.homework.GoodUtil.getCorrectScaleCurrency;
 
 public class Goods {
 
@@ -34,10 +35,6 @@ public class Goods {
         output.append("Sales Taxes: ").append(formatCurrency(salesTaxes())).append("\n");
         output.append("Total: ").append(formatCurrency(totalPrice()));
         return output.toString();
-    }
-
-    private String formatCurrency(double currency) {
-        return String.format("%.2f", currency);
     }
 
     private Map<String, Double> salesTaxesAndTotalPrice() {

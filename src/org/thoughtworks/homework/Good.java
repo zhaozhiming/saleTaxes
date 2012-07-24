@@ -1,13 +1,12 @@
 package org.thoughtworks.homework;
 
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.math.BigDecimal.ROUND_HALF_UP;
 import static java.util.Arrays.asList;
+import static org.thoughtworks.homework.GoodUtil.getCorrectScaleCurrency;
 
 public class Good {
     private static final String GOOD_DESCRIPTION_REGEX = "(\\d+)\\s((\\w+\\s)+)at\\s(\\d+.\\d+)";
@@ -20,15 +19,15 @@ public class Good {
     }
 
     public String name() {
-        return matchDescription().group(2).trim();
+        return parse().group(2).trim();
     }
 
     public double price() {
-        return Double.valueOf(matchDescription().group(4));
+        return Double.valueOf(parse().group(4));
     }
 
     public int count() {
-        return Integer.valueOf(matchDescription().group(1));
+        return Integer.valueOf(parse().group(1));
     }
 
     public boolean isImported() {
@@ -57,11 +56,7 @@ public class Good {
         return getCorrectScaleCurrency(price() + tax());
     }
 
-    public static double getCorrectScaleCurrency(double currency) {
-        return new BigDecimal(currency).setScale(2, ROUND_HALF_UP).doubleValue();
-    }
-
-    private Matcher matchDescription() {
+    private Matcher parse() {
         Pattern pattern = Pattern.compile(GOOD_DESCRIPTION_REGEX);
         Matcher matcher = pattern.matcher(description);
         matcher.find();
