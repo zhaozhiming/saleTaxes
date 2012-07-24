@@ -1,31 +1,40 @@
 package org.thoughtworks.homework;
 
-import static org.thoughtworks.homework.PriceUtil.setPriceScale;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.thoughtworks.homework.Good.getCorrectScaleCurrency;
 
 public class Goods {
 
-    public static final double TAX_PRICE_MIN_UNIT = 0.05;
+    public static final String SALES_TAXES = "salesTaxes";
+    public static final String TOTAL_PRICE = "totalPrice";
+    private String descriptions;
 
-    private double price;
-    private Tax tax;
-
-    public Goods(double price, Tax tax) {
-        this.price = price;
-        this.tax = tax;
+    public Goods(String descriptions) {
+        this.descriptions = descriptions;
     }
 
-    public double afterTaxPrice() {
-        return setPriceScale(price + taxMoney());
+    public double salesTaxes() {
+        return salesTaxesAndTotalPrice().get(SALES_TAXES);
     }
 
-    public double taxMoney() {
-        double taxMoney = setPriceScale(price * tax.getTaxRate());
-        double modMoney = taxMoney % TAX_PRICE_MIN_UNIT;
-        return (modMoney == 0) ? taxMoney : roundUpTax(taxMoney, modMoney);
+    public double totalPrice() {
+        return salesTaxesAndTotalPrice().get(TOTAL_PRICE);
     }
 
-    private double roundUpTax(double taxMoney, double modMoney) {
-        return taxMoney + (TAX_PRICE_MIN_UNIT - modMoney);
+    private Map<String, Double> salesTaxesAndTotalPrice() {
+        String[] descriptionArray = descriptions.split("\n");
+        double salesTaxes = 0;
+        double totalPrice = 0;
+        for (String description : descriptionArray) {
+            Good good = new Good(description);
+            salesTaxes += good.tax();
+            totalPrice += good.priceAfterTax();
+        }
+        HashMap<String, Double> result = new HashMap<String, Double>();
+        result.put(SALES_TAXES, getCorrectScaleCurrency(salesTaxes));
+        result.put(TOTAL_PRICE, getCorrectScaleCurrency(totalPrice));
+        return result;
     }
-
 }
